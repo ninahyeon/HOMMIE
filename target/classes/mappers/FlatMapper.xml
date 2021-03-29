@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.human.DAOIF.IF_flatDAO">
+	<!-- <resultMap type="HashMap" id="cluMap"> <id column="flatID" property="flatID" 
+		/> <id column="lat" property="lat" /> <id column="lng" property="lng" /> 
+		</resultMap> -->
+
+	<!-- 파일 업로드 -->
+	<insert id="saveFile">
+		insert into files (fileID, flatID, fileName) values
+		(fileNum.NEXTVAL, #{flatID}, #{fileName})
+	</insert>
+
+	<!-- 매물 업로드 -->
+	<insert id="insertF" useGeneratedKeys="true"
+		keyProperty="flatID" keyColumn="flatID">
+		insert into flats (flatID, memberID,
+		room, rentType, deposit, rent, pyeong,
+		floor, moveDate, internet,
+		furniture, pet, park, lat, lng, roadAdrs, jibunAdrs , title,
+		detail,
+		deArds)
+		values (flatNum.NEXTVAL,
+		#{memberID}, #{room}, #{rentType},
+		#{deposit},
+		#{rent}, #{pyeong},
+		#{floor},
+		to_date(#{moveDate},'yyyy-mm-dd'),
+		#{internet},
+		#{furniture},
+		#{pet},
+		#{park}, #{lat}, #{lng}, #{roadAdrs},
+		#{jibunAdrs}, #{title},
+		#{detail},#{deArds})
+	</insert>
+
+	<!-- 모든 매물 정보 가져오기 -->
+	<select id="selectAll" resultType="HashMap">
+		select TO_CHAR(flatID) as
+		flatID, lat, lng from flats where done='N'
+	</select>
+
+	<!-- 클러스터 클릭 시 그 안에 있는 매물 리스트 가져오기 -->
+	<select id="selectCluster" resultType="FlatsDTO">
+		select f.flatID, f.room, f.rentType, f.deposit, f.rent, f.title,
+		fi.fileName
+		from flats f, (select * from files where fileID in (select
+		MIN(fileID)
+		from files group by flatID)) fi where f.flatID=fi.flatID
+		and f.flatID
+		in
+		<foreach collection="list" item="flatID" open="(" close=")"
+			separator=",">
+			#{flatID.value}
+		</foreach>
+	</select>
+	
+	<!-- 선택된 옵션에 맞는 매물 리스트 -->
+	<select id="selectWExtra" resultType="FlatsDTO">
+		select f.flatID, f.room,
+		f.rentType, f.deposit, f.rent, f.title, f.lat, f.lng,
+		fi.fileName
+		from flats f,
+		(select * from files where fileID in (select
+		MIN(fileID) from files group by flatID)) fi
+		where f.flatID=fi.flatID
+		and f.lat between #{swLat}
+		and #{neLat} and f.lng between #{swLng} and #{neLng}
+		and f.room in (#{one}, #{two}, #{three})
+		and f.rentType in (#{monthly}, #{reserve})
+		and f.deposit between #{deMin} and #{deMax}
+		and f.rent between #{reMin} and #{reMax}
+		and f.internet in ('Y', #{internet})
+		and f.pet in ('Y',#{pet})
+		and f.furniture in ('Y',#{furniture})
+		and f.park in ('Y',#{park})
+		and f.done='N'
+		order by f.uploadDate DESC
+	</select>
+
+	<!-- 매물 상세보기 -->
+	<select id="selectOne" resultType="FlatsDTO">
+		select flatID, memberID, room,
+		rentType, deposit, rent, pyeong, floor, TO_CHAR(moveDate,'YYYY-MM-DD')
+		as moveDate, internet, furniture, pet, park, lat, lng, roadAdrs,
+		jibunAdrs, title, detail, TO_CHAR(uploadDate, 'YYYY-MM-DD') as
+		uploadDate, done, deArds from flats where
+		flatID = #{fNum}
+	</select>
+
+
+	<!-- 해당 매물의 모든 사진 가져오기 -->
+	<select id="selectFiles" resultType="FileDTO">
+		select * from files
+		where
+		flatID=#{fNum}
+	</select>
+
+
+	<!-- 근처의 다른 매물 -->
+	<select id="selectOtherFlats" resultType="FlatsDTO">
+		select f.flatID,
+		f.room,
+		f.rentType, f.deposit, f.rent, f.title,
+		fi.fileName
+		from flats f,
+		(select * from files where fileID in (select
+		MIN(fileID)
+		from files
+		group by flatID)) fi where f.flatID=fi.flatID
+		and
+		f.roadAdrs like
+		#{where}||'%'
+		and ROWNUM <![CDATA[ < ]]>5
+		and f.done='N'
+		order by f.uploadDate DESC
+	</select>
+
+
+	<!-- 내가 업로드한 매물 리스트 -->
+	<select id="getMyFList" resultType="FlatsDTO">
+		select f.flatID,
+		f.room,
+		f.rentType, f.deposit, f.rent, f.title, f.done, TO_CHAR(f.uploadDate,
+		'YYYY-MM-DD') as
+		uploadDate,
+		fi.fileName
+		from flats f,
+		(select * from
+		files where fileID in (select
+		MIN(fileID)
+		from files
+		group by flatID)) fi
+		where f.flatID=fi.flatID
+		and
+		f.memberID=#{logID}
+	</select>
+
+
+	<!-- 선택된 사진 한 장만 삭제 -->
+	<delete id="delOnePhoto">
+		delete from files where fileID=#{pNum}
+	</delete>
+
+
+	<!-- 해당 매물 모든 사진 삭제 -->
+	<delete id="delAllPhoto">
+		delete from files where flatID = #{fNum}
+	</delete>
+
+	<!-- 매물 수정 -->
+	<update id="updateOneF">
+		update flats set room=#{room}, rentType=#{rentType},
+		deposit=#{deposit}, rent=#{rent}, lat=#{lat}, lng=#{lng},
+		roadAdrs=#{roadAdrs}, jibunAdrs=#{jibunAdrs}, pyeong=#{pyeong},
+		floor=#{floor}, moveDate=to_date(#{moveDate},'yyyy-mm-dd'),
+		park=#{park}, pet=#{pet},
+		internet=#{internet}, furniture=#{furniture},
+		title=#{title},
+		detail=#{detail}, deArds=#{deArds} where
+		flatID=#{flatID}
+	</update>
+
+	<!-- 매물 거래완료 상태 업데이트 -->
+	<update id="doneUpdate">
+		update flats set done=#{done} where flatID=#{flatID}
+	</update>
+
+	<!-- 매물 한 개 삭제 -->
+	<delete id="delOneFlat">
+		delete from flats where flatID=#{fNum}
+	</delete>
+
+	<!-- 해당 매물의 특정 사진 한 장 가져오기 -->
+	<select id="selectOneFile" resultType="FileDTO">
+		select * from files where
+		fileID=#{pNum}
+	</select>
+
+	<!-- 해당 매물의 사진 한 장만 가져오기 -->
+	<select id="selectOnlyFile" resultType="string">
+		select fileName from
+		files where
+		flatid=#{fNum} and rownum=1
+	</select>
+
+	<!-- 찜하기 -->
+	<insert id="dipsInsert">
+		insert into dips (dipsID, memberID, flatID) values
+		(dipsNum.NEXTVAL, #{logID}, #{fNum})
+	</insert>
+
+	<!-- 찜 취소 -->
+	<delete id="dipsDelete">
+		delete from dips where memberID=#{logID} and
+		flatID=#{fNum}
+	</delete>
+
+	<!-- 해당 매물 해당 사용자가 찜했나? -->
+	<select id="selectOneDip" resultType="int">
+		select count(*) from dips
+		where memberID=#{memberID}
+		and flatID=#{flatID}
+	</select>
+
+	<!-- 해당 매물 찜 당한 총 갯수 -->
+	<select id="totalDips" resultType="int">
+		select count(*) from dips
+		where flatID=#{flatID}
+	</select>
+
+	<!-- 해당 사용자가 찜한 매물 전체 갯수 -->
+	<select id="dipsPCount" resultType="int">
+		select count(*) num from dips
+		where memberID=#{logID}
+	</select>
+
+	<!-- 내가 찜한 목록 10개씩 가져오기 -->
+	<select id="getDipsList" resultType="FlatsDTO">
+	select f.*, fi.fileName from
+	(select row_number() over (order by dipsID) num, d.* from dips d where
+	d.memberID=#{memberID} order by
+	dipsID desc) d,
+	(select * from files
+	where fileID in (select MIN(fileID) from files group by
+	flatID)) fi,
+	(select * from flats) f
+	where num between #{nowPageStart} and
+	#{nowPageStart}+9 and fi.flatID=f.flatID and
+	f.flatID=d.flatID
+	and
+	f.done='N'
+	</select>
+
+	<!-- 내 주변 방 찾기 -->
+	<select id="flatsNearMe" resultType="FlatsDTO">
+		select row_number() over(order by f.flatID desc) as num,
+		f.flatID,f.room,f.rentType, f.deposit, f.rent, f.title, f.done,
+		TO_CHAR(f.uploadDate,'YYYY-MM-DD') as uploadDate, f.roadAdrs,
+		fi.fileName from (select * from flats where (roadAdrs like
+		'%'||#{roadAdrs}||'%' and
+		roadAdrs like '%'||#{jibunAdrs}||'%') or
+		(jibunAdrs like '%'||#{roadAdrs}||'%' and jibunAdrs like
+		'%'||#{jibunAdrs}||'%')) f,
+		(select * from files where fileID in
+		(select MIN(fileID)
+		from files group by flatID)) fi
+		where
+		f.flatID=fi.flatID
+		and done='N'
+		and ROWNUM <![CDATA[ < ]]>6
+	</select>
+</mapper>

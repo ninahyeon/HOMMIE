@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.human.DAOIF.IF_ChatDAO">
+
+	<!-- 채팅방 존재 확인 -->
+	<select id="roomExist" resultType="Integer">
+		select roomNum from chatRoom
+		where (person1=#{sender} and
+		person2=#{receiver}) or
+		(person1=#{receiver} and person2=#{sender})
+	</select>
+
+	<!-- 채팅방 생성 -->
+	<insert id="createChatRoom" useGeneratedKeys="true"
+		keyProperty="roomNum" keyColumn="roomNum">
+		insert into chatRoom (roomNum,
+		person1, person2)
+		values(chatNum.NEXTVAL,
+		#{sender}, #{receiver})
+	</insert>
+
+	<!-- 해당 사용자가 속한 모든 채팅방 리스트로 가져오기 -->
+	<select id="myChatList" resultType="ChatDTO">
+		select * from (select * from
+		chatMsg where msgNum in (select MAX(msgNum) from chatMsg group by
+		roomNum)) where sender=#{logID} or receiver=#{logID}
+	</select>
+
+	<!-- 전송 메시지 DB에 저장 -->
+	<insert id="saveChat">
+		insert into chatMsg (MsgNum, roomNum, sender,
+		receiver, msg) values
+		(msgNum.NEXTVAL, #{roomNumber}, #{senderName},
+		#{getterName},#{message})
+	</insert>
+
+	<!-- 해당 인물들간의 모든 메시지 가져오기 -->
+	<select id="getAllMsg" resultType="ChatDTO">
+		select * from chatMsg where
+		roomNum=#{roomNum} order by sendTime
+	</select>
+</mapper>

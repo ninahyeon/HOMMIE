@@ -1,0 +1,37 @@
+.login{
+    width: 49%;
+}
+.signup{
+    width: 49%;
+    background-color: rgb(117, 117, 117);
+    color: white;
+}
+.btn-google{
+    width: 100%;
+}
+.kakao{
+    width: 100%;
+    text-decoration: none !important;
+    background-color: rgb(255, 208, 0);
+}
+
+/* 회원가입 */
+#goBack{
+    float: left;
+    margin-left: -25px;
+}
+#goBack .btn{
+    height:70px;
+}
+#ttl{
+    float: left;
+    margin-top: 10px;
+    font-size: 35px;
+}
+.signup_title{
+    clear: both;
+    text-align: center;
+}
+.signup_only{
+    width: 100%;
+}

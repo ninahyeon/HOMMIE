@@ -1,0 +1,233 @@
+* {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	font-family: '맑은고딕';
+	text-decoration: none;
+}
+
+/* 네비 호버  */
+.dropdown-item:hover {
+	cursor: pointer;
+}
+/* 홈 화면 */
+.logo {
+	max-width: 200px;
+}
+/* 검색 */
+.search_room {
+	margin: 100px auto;
+	text-align: center;
+	width: 80%;
+	padding: 0;
+}
+
+.sch_guide {
+	margin-bottom: 30px;
+}
+
+.blue-txt {
+	color: cornflowerblue;
+	font-weight: bold;
+}
+
+.sch_bar {
+	border: 1px solid #9999;
+	height: 60px;
+	padding: 20px 20px;
+	margin: 0 auto;
+}
+
+.sch_box {
+	border: none;
+	height: 50px;
+	width: 50%;
+}
+
+.sch_btn {
+	border-radius: 0;
+	padding: 10px 20px;
+	margin-top: -5px;
+}
+
+.gubun1 {
+	width: 80%;
+	margin: 0 auto;
+}
+
+/* PC 키워드 방 찾기 */
+.keyword_room {
+	margin-bottom: 50px;
+}
+
+.sm-title1 {
+	text-align: center;
+	margin-top: 50px;
+}
+
+.keysch {
+	align-items: center;
+}
+
+.keysch li {
+	width: 18.5%;
+	min-width: 200px;
+	border: 1px solid #9999;
+	border-radius: 5%;
+	padding: 20px 0;
+	margin: 20px 5px;
+	float: left;
+	border: 1px solid #9999;
+	height: 100%;
+}
+
+.keyword {
+	max-width: 100%;
+	margin-bottom: 10px;
+}
+
+.keysch li p {
+	margin-left: 5px;
+}
+
+/* PC 최근 본 방 */
+.gubun3 {
+	margin-top: 400px;
+}
+
+.recent_view {
+	clear: both;
+	margin-bottom: 80px;
+}
+
+.saa {
+	text-decoration: none;
+	color: rgb(63, 63, 63);
+}
+
+.spacie {
+	clear: both;
+}
+
+.see_all {
+	text-align: center;
+	margin-top: 50px;
+	display: block;
+}
+
+.keysch li:hover {
+	cursor: pointer;
+}
+
+.nothingF {
+	font-size: 14px;
+	color: #666;
+	text-align: center;
+	margin: 150px 0 200px -20px;
+	text-align: center;
+}
+
+/* 푸터 */
+.foo {
+	background-color: rgb(63, 63, 63);
+	color: rgb(180, 180, 180);
+	margin-top: 30px;
+	height: 420px;
+}
+
+.left-top {
+	padding-top: 20px;
+}
+
+.left-top li {
+	float: left;
+	margin: 5px 10px;
+}
+
+.left-top li:nth-child(-n+3) {
+	border-right: 1px solid rgb(163, 163, 163);
+	padding-right: 20px;
+}
+
+.gubun2 {
+	color: cornsilk;
+	width: 95%;
+	margin: 50px auto;
+}
+
+.left-bottom {
+	clear: both;
+	float: left;
+	margin-left: 10px;
+}
+
+.right-bottom {
+	float: right;
+	margin-top: 190px;
+}
+
+.right-bottom li {
+	float: left;
+	margin-right: 15px;
+}
+
+.right-bottom a {
+	color: rgb(163, 163, 163);
+}
+
+/* 퀵메뉴 */
+.quick_menu {
+	clear: both;
+	background-color: rgb(56, 56, 56);
+	position: fixed;
+	right: 0;
+	top: 180px;
+	height: 150px;
+	width: 120px;
+	z-index: 100;
+	text-align: center;
+	padding-bottom: 1s0px;
+}
+
+.quick_menu li {
+	height: 50px;
+	width: 120px;
+	padding-left: 5px;
+	margin-left: -30px;
+	border-bottom: 1px solid #9999;
+	padding-top: 20px;
+}
+
+.quick_menu li a {
+	color: rgb(206, 206, 206);
+}
+
+.quick_menu a {
+	text-decoration: none;
+	color: rgb(206, 206, 206);
+}
+/* 모바일 퀵메뉴 */
+.mobile_top {
+	text-align: center;
+	position: fixed;
+	bottom: 10px;
+	right: 10px;
+	background-color: rgba(110, 110, 110, 0.623);
+	border-radius: 30px;
+	padding: 10px 20px;
+	z-index: 1;
+}
+
+.mobile_top a {
+	color: honeydew;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+/* 경고창 */
+.myAlert {
+	position: fixed;
+	top: 100px;
+	right: 0;
+	z-index: 1;
+}

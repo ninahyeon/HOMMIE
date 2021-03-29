@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+	<!-- 데이터베이스 연결 -->
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName"
+			value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url"
+			value="jdbc:oracle:thin:@127.0.0.1:1521:xe" />
+		<property name="username" value="hm" />
+		<property name="password" value="1111" />
+	</bean>
+	<!-- SqlSession -->
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- MyBatis 설정 파일의 위치를 지정합니다. -->
+		<property name="configLocation"
+			value="classpath:/mybatis-config.xml" /> <!-- SQL 파일의 위치를 지정합니다. -->
+		<property name="mapperLocations"
+			value="classpath:mappers/**/*Mapper.xml" />
+	</bean> <!-- SqlSession -->
+	<bean id="sqlSession"
+		class="org.mybatis.spring.SqlSessionTemplate"
+		destroy-method="clearCache">
+		<constructor-arg name="sqlSessionFactory"
+			ref="sqlSessionFactory" />
+	</bean>
+
+	<!-- 정의된 패키지에 있는 클래스를 자동으로 빈으로 생성하여 컨테이너에 등록해라. 컨트롤러에서 주입받기 위해 설정 -->
+	<context:component-scan
+		base-package="com.human.DAOIF"></context:component-scan>
+	<context:component-scan
+		base-package="com.human.service"></context:component-scan>
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+
+</beans>
