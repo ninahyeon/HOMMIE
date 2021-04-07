@@ -53,6 +53,7 @@
 			const otherName = $("#otherID").val();
 			const roomNum = $("#roomNum").val();
 			const data = {
+				dataType : "register",
 				roomNumber : roomNum,
 				senderName : myName,
 				getterName : otherName,
@@ -94,6 +95,7 @@
 			const otherName = $("#otherID").val();
 			const roomNum = $("#roomNum").val();
 			const data = {
+				dataType : "realMSG",
 				roomNumber : roomNum,
 				senderName : myName,
 				getterName : otherName,
